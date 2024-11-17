@@ -97,7 +97,6 @@ async function tokenEndpointRequest(body) {
             config.tokenEndpoint,
             {
                 method: 'POST',
-                auth: `${config.clientId}:${config.clientSecret}`,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 }
@@ -124,6 +123,7 @@ async function getToken(code) {
     const body = new URLSearchParams();
     body.append('grant_type', 'authorization_code');
     body.append('client_id', config.clientId);
+    body.append('client_secret', config.clientSecret);
     body.append('redirect_uri', config.redirectUri);
     body.append('code', code);
 
@@ -134,6 +134,7 @@ async function refreshToken(token) {
     const body = new URLSearchParams();
     body.append('grant_type', 'refresh_token');
     body.append('client_id', config.clientId);
+    body.append('client_secret', config.clientSecret);
     body.append('redirect_uri', config.redirectUri);
     body.append('refresh_token', token.refresh_token);
 
@@ -208,6 +209,7 @@ async function viewerRequestHandler(request, event) {
             authURL.searchParams.append('response_type', 'code');
             authURL.searchParams.append('client_id', config.clientId);
             authURL.searchParams.append('redirect_uri', config.redirectUri);
+            authURL.searchParams.append('scope', 'openid');
             authURL.searchParams.append('state', JSON.stringify({uri: request.uri, querystring: request.querystring}));
 
             request = {
